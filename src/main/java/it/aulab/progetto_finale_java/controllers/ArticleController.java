@@ -1,7 +1,9 @@
 package it.aulab.progetto_finale_java.controllers;
 
 import java.security.Principal;
-
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -10,11 +12,13 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import it.aulab.progetto_finale_java.dtos.ArticleDto;
 import it.aulab.progetto_finale_java.dtos.CategoryDto;
 import it.aulab.progetto_finale_java.models.Article;
 import it.aulab.progetto_finale_java.models.Category;
@@ -34,6 +38,24 @@ public class ArticleController {
 
     @Autowired
     private ArticleService articleService;
+
+
+    // Rotta per la visualizzazione di tutti gli articoli
+    @GetMapping
+    public String articlesIndex(Model viewModel) {
+        viewModel.addAttribute("title", "Tutti gli articoli");
+
+        List<ArticleDto> articles = articleService.readAll();
+
+        //  Ordina i risultati in base all’articolo più recente 
+        Collections.sort(articles, Comparator.comparing(ArticleDto::getPublish_date).reversed());
+
+        viewModel.addAttribute("articles", articles);
+
+        return "article/articles";
+
+    }
+
 
     // Rotta per la creazione di un articolo
     @GetMapping("create")
@@ -65,6 +87,14 @@ public class ArticleController {
         redirectAttributes.addFlashAttribute("successMessage", "Articolo creato con successo!");
 
         return "redirect:/";
+    }
+
+    // Rotta di dettaglio di un articolo
+    @GetMapping("detail/{id}")
+    public String detailArticle(@PathVariable("id") Long id, Model viewModel) {
+        viewModel.addAttribute("title", "Article detail");
+        viewModel.addAttribute("article", articleService.read(id));
+        return "article/detail";
     }
 
 

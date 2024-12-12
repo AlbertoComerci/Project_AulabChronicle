@@ -15,4 +15,6 @@ public interface UserService {
     //  Riceve in input una email e ne cercerá l'utente
     User findUserByEmail(String email);
 
+    User find(Long id);
+
 }
