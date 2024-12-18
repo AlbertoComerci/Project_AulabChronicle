@@ -37,7 +37,7 @@ public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
             authorize
                 .requestMatchers("/admin/dashboard", "/categories/create", "/categories/edit/{id}", "/categories/update/{id}", "/categories/delete/{id}").hasRole("ADMIN")
                 .requestMatchers("/revisor/dashboard","/revisor/detail/{id}","/accept").hasRole("REVISOR")
-                .requestMatchers("/register/**", "/register", "/", "/articles", "/images/**", "/articles/detail/**", "/categories/search/{id}", "/search/{id}").permitAll()
+                .requestMatchers("/register/**", "/register", "/", "/articles", "/images/**", "/articles/detail/**", "/categories/search/{id}", "/search/{id}", "/articles/search").permitAll()
                 .anyRequest().authenticated()
         )
         .formLogin(form -> form
