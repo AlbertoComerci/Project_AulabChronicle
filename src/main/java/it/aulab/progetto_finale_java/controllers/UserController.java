@@ -1,10 +1,12 @@
 package it.aulab.progetto_finale_java.controllers;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,8 +19,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import it.aulab.progetto_finale_java.dtos.ArticleDto;
 import it.aulab.progetto_finale_java.dtos.UserDto;
+import it.aulab.progetto_finale_java.models.Article;
 import it.aulab.progetto_finale_java.models.User;
+import it.aulab.progetto_finale_java.repositories.ArticleRepository;
+import it.aulab.progetto_finale_java.repositories.CareerRequestRepository;
 import it.aulab.progetto_finale_java.services.ArticleService;
+import it.aulab.progetto_finale_java.services.CategoryService;
 import it.aulab.progetto_finale_java.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -32,12 +38,28 @@ public class UserController {
 
     @Autowired
     private ArticleService articleService;
+
+    @Autowired
+    private ArticleRepository articleRepository;
+
+    @Autowired
+    CareerRequestRepository careerRequestRepository;
+
+    @Autowired
+    private CategoryService categoryService;
+
+    @Autowired
+    private ModelMapper modelMapper;
     
     // Rotta della home
     @GetMapping("/")
     public String home(Model viewModel) {
 
-        List<ArticleDto> articles = articleService.readAll();
+        // Recupera tutti gli articoli accettati
+        List<ArticleDto> articles = new ArrayList<ArticleDto>();
+        for(Article article : articleRepository.findByIsAcceptedTrue()) {
+            articles.add(modelMapper.map(article, ArticleDto.class));
+        }
 
         // Ordina e invia al template gli articoli ordinati in modo decrescente
         Collections.sort(articles, Comparator.comparing(ArticleDto::getPublish_date).reversed());
@@ -100,6 +122,23 @@ public class UserController {
         viewModel.addAttribute("articles", articles);
 
         return "article/articles";
+    }
+
+    // Rotta per la dashboard dell'admin
+    @GetMapping("/admin/dashboard")
+    public String adminDashboard(Model viewModel) {
+        viewModel.addAttribute("title", "Richieste ricevute");
+        viewModel.addAttribute("requests", careerRequestRepository.findByIsCheckedFalse());
+        viewModel.addAttribute("categories", categoryService.readAll());
+        return "admin/dashboard";
+    }
+
+    // Rotta per la dashboard del revisor
+    @GetMapping("/revisor/dashboard")
+    public String revisorDashboard(Model viewModel) {
+        viewModel.addAttribute("title", "Articoli da revisionare");
+        viewModel.addAttribute("articles", articleRepository.findByIsAcceptedIsNull());
+        return "revisor/dashboard";
     }
     
 }
