@@ -112,6 +112,48 @@ public class ArticleController {
         return "article/detail";
     }
 
+    // Rotta di modifica di un articolo
+    @GetMapping("/edit/{id}")
+    public String editArticle(@PathVariable("id") Long id, Model viewModel) {
+        viewModel.addAttribute("title", "Modifica articolo");
+        viewModel.addAttribute("article", articleService.read(id));
+        viewModel.addAttribute("categories", categoryService.readAll());
+        return "article/edit";
+    }
+
+    // Rotta di memorizzazione modifica di un articolo
+    @PostMapping("/update/{id}")
+    public String articleUpdate(@PathVariable("id") Long id,
+                                @Valid @ModelAttribute("article") Article article,
+                                BindingResult result,
+                                RedirectAttributes redirectAttributes,
+                                Principal principal,
+                                MultipartFile file,
+                                Model viewModel) {
+
+        // Controllo degli errori con validationi
+        if (result.hasErrors()) {
+            viewModel.addAttribute("title", "Modifica articolo");
+            article.setImage(articleService.read(id).getImage());
+            viewModel.addAttribute("article", article);
+            viewModel.addAttribute("categories", categoryService.readAll());
+            return "article/edit";
+        }
+
+        articleService.update(id, article, file);
+        redirectAttributes.addFlashAttribute("successMessage", "Articolo modificato con successo!");
+
+        return "redirect:/articles";
+    }
+
+    // Rotta di cancellazione di un articolo
+    @GetMapping("/delete/{id}")
+    public String articleDelete(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
+        articleService.delete(id);
+        redirectAttributes.addFlashAttribute("successMessage", "Articolo cancellato con successo!");
+        return "redirect:/writer/dashboard";
+    }
+
     // Rotta di dettaglio di un articolo per il revisore
     @GetMapping("revisor/detail/{id}")
     public String detailArticleRevisor(@PathVariable("id") Long id, Model viewModel) {

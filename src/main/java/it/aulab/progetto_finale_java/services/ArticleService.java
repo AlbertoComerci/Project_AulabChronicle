@@ -94,16 +94,140 @@ public class ArticleService implements CrudService<ArticleDto, Article, Long> {
         
     }
 
+    // update originale
+    // @Override
+    // public ArticleDto update(Long key, Article updateArticle, MultipartFile file) {
+    //     String url = "";
+
+    //     // Controllo l'esistenza dell'articolo in base al suo id
+    //     if (articleRepository.existsById(key)) {
+    //         // Assegno all'articolo proveniente dal form l'id dell'articolo originale
+    //         updateArticle.setId(key);
+    //         // Recupero l'articolo originale non modificato
+    //         Article article = articleRepository.findById(key).get();
+    //         // Imposto l'utente dell'articolo del form con l'utente dell'articolo originale
+    //         updateArticle.setUser(article.getUser());
+
+    //         // Faccio un controllo  sulla presenza o meno del file nell'articolo del form quindi capisco se devo modificare o meno l'immagine
+    //         if(!file.isEmpty()) {
+    //             try {
+    //             // Elimino l'immagine precedente
+    //             imageService.deleteImage(article.getImage().getPath());
+    //             try {
+    //                 // Salvo la nuova immagine sul cloud
+    //                 CompletableFuture<String> futureUrl = imageService.saveImageOnCloud(file);
+    //                 url = futureUrl.get();
+    //             } catch (Exception e) {
+    //                 e.printStackTrace();
+    //             }
+
+    //             // Salvo il nuovo path nel db
+    //             imageService.saveImageOnDB(url, updateArticle);
+
+    //             // Essendo l'immagine modificata, l'articolo torna in revisione
+    //             updateArticle.setIsAccepted(null);
+    //             return modelMapper.map(articleRepository.save(updateArticle), ArticleDto.class);
+    //         } catch (Exception e) {
+    //             e.printStackTrace();
+    //         }
+    //         } else if(article.getImage().getPath() == null) { // Se l'articolo originale non ha immagine e quello del form non ha immagine, allora sicuramente non è stata fatta alcuna modifica
+            
+    //         updateArticle.setIsAccepted(article.getIsAccepted());
+
+    //         } else { 
+    //             // Se l'immagine non è stata modificata devo fare un check su tutti gli altri campi, se diversi l'articolo torna in revisione
+    //             // Se l'immagine non è stata modificata posso impostare sull'articolo modificato la stessa immagine dell'articolo originale
+    //             updateArticle.setImage(article.getImage());
+
+    //             if(updateArticle.equals(article) == false) {
+    //                 updateArticle.setIsAccepted(null);
+    //             } else {
+    //                 updateArticle.setIsAccepted(article.getIsAccepted());
+    //             }
+
+    //             return modelMapper.map(articleRepository.save(updateArticle), ArticleDto.class);
+    //             }
+    //         } else {
+    //         throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+    //     }
+    //     return null;
+    // }
+
     @Override
-    public ArticleDto update(Long key, Article model, MultipartFile file) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
+    public ArticleDto update(Long key, Article updateArticle, MultipartFile file) {
+        String url = "";
+
+        // Controllo l'esistenza dell'articolo in base al suo id
+        if (articleRepository.existsById(key)) {
+            // Assegno all'articolo proveniente dal form l'id dell'articolo originale
+            updateArticle.setId(key);
+            // Recupero l'articolo originale non modificato
+            Article article = articleRepository.findById(key).get();
+            // Imposto l'utente dell'articolo del form con l'utente dell'articolo originale
+            updateArticle.setUser(article.getUser());
+
+            // Faccio un controllo  sulla presenza o meno del file nell'articolo del form quindi capisco se devo modificare o meno l'immagine
+            if(!file.isEmpty()) {
+                try {
+                // Elimino l'immagine precedente se getImage() non ritorna nullo
+                if(article.getImage() != null){
+
+                    imageService.deleteImage(article.getImage().getPath());
+
+                }
+                try {
+                    // Salvo la nuova immagine sul cloud
+                    CompletableFuture<String> futureUrl = imageService.saveImageOnCloud(file);
+                    url = futureUrl.get();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                // Salvo il nuovo path nel db
+                imageService.saveImageOnDB(url, updateArticle);
+
+                // Essendo l'immagine modificata, l'articolo torna in revisione
+                updateArticle.setIsAccepted(null);
+                return modelMapper.map(articleRepository.save(updateArticle), ArticleDto.class);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            } else { 
+                // Se l'immagine non è stata modificata devo fare un check su tutti gli altri campi, se diversi l'articolo torna in revisione
+                // Se l'immagine non è stata modificata posso impostare sull'articolo modificato la stessa immagine dell'articolo originale
+                updateArticle.setImage(article.getImage());
+
+                if(updateArticle.equals(article) == false) {
+                    updateArticle.setIsAccepted(null);
+                } else {
+                    updateArticle.setIsAccepted(article.getIsAccepted());
+                }
+
+                return modelMapper.map(articleRepository.save(updateArticle), ArticleDto.class);
+                }
+            } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+        return null;
     }
 
     @Override
     public void delete(Long key) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'delete'");
+        if (articleRepository.existsById(key)) {
+            Article article = articleRepository.findById(key).get();
+
+            try {
+                String path = article.getImage().getPath();
+                article.getImage().setArticle(null);
+                imageService.deleteImage(path);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            articleRepository.deleteById(key);
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
     }
 
     public List<ArticleDto> searchByCategory(Category category) {
