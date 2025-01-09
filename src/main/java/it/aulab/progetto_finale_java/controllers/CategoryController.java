@@ -48,6 +48,9 @@ public class CategoryController {
 
         viewModel.addAttribute("articles", acceptedArticles);
 
+        List<CategoryDto> categories = categoryService.readAll();
+        viewModel.addAttribute("categories", categories);
+
         return "article/articles";
     }
 

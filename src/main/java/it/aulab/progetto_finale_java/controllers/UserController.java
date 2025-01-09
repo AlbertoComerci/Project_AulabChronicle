@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import it.aulab.progetto_finale_java.dtos.ArticleDto;
+import it.aulab.progetto_finale_java.dtos.CategoryDto;
 import it.aulab.progetto_finale_java.dtos.UserDto;
 import it.aulab.progetto_finale_java.models.Article;
 import it.aulab.progetto_finale_java.models.User;
@@ -68,6 +69,11 @@ public class UserController {
         List<ArticleDto> lastThreeArticles = articles.stream().limit(3).collect(Collectors.toList());
         
         viewModel.addAttribute("articles", lastThreeArticles);
+
+        // Passo le categorie in modo da mostrarle nella home
+
+        List<CategoryDto> categories = categoryService.readAll();
+        viewModel.addAttribute("categories", categories);
 
         return "home";
     }
@@ -122,6 +128,9 @@ public class UserController {
         List<ArticleDto> articles = articleService.searchByAuthor(user);
         viewModel.addAttribute("articles", articles);
 
+        List<CategoryDto> categories = categoryService.readAll();
+        viewModel.addAttribute("categories", categories);
+
         return "article/articles";
     }
 
@@ -131,6 +140,10 @@ public class UserController {
         viewModel.addAttribute("title", "Richieste ricevute");
         viewModel.addAttribute("requests", careerRequestRepository.findByIsCheckedFalse());
         viewModel.addAttribute("categories", categoryService.readAll());
+
+        List<CategoryDto> categories = categoryService.readAll();
+        viewModel.addAttribute("categories", categories);
+
         return "admin/dashboard";
     }
 
@@ -139,6 +152,10 @@ public class UserController {
     public String revisorDashboard(Model viewModel) {
         viewModel.addAttribute("title", "Articoli da revisionare");
         viewModel.addAttribute("articles", articleRepository.findByIsAcceptedIsNull());
+
+        List<CategoryDto> categories = categoryService.readAll();
+        viewModel.addAttribute("categories", categories);
+
         return "revisor/dashboard";
     }
 
@@ -150,6 +167,10 @@ public class UserController {
         List<ArticleDto> userArticles = articleService.readAll().stream().filter(article -> article.getUser().getEmail().equals(principal.getName())).toList();
 
         viewModel.addAttribute("articles", userArticles);
+
+        List<CategoryDto> categories = categoryService.readAll();
+        viewModel.addAttribute("categories", categories);
+        
         return "writer/dashboard";
     }
     

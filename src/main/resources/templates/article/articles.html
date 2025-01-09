@@ -3,26 +3,38 @@
 <head th:insert="~{index :: head}"></head>
 <body>
     <div th:insert="~{index :: navbar}"></div>
-
+    
+    <!-- ? Barra delle categorie -->
+    <div class="bg-secondary py-2">
+        <div class="container">
+            <ul class="nav justify-content-center">
+                <!-- ? cicla le categorie -->
+                <li class="nav-item" th:each="category : ${categories}">
+                    <a class="nav-link text-white" th:href="@{/categories/search/{id}(id=${category.id})}" th:text="${category.name}"></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    
     <div class="min-vh-100">
         <div th:if="${successMessage}" class="alert alert-success">
             <p th:text="${successMessage}"></p>
         </div>
-
+        
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-10 mb-5">
-                    <h1 class="text-center" th:text="${title}">Index article</h1>
+                    <h1 class="text-center mt-5" th:text="${title}">Index article</h1>
                 </div>
             </div>
         </div>
-
+        
         <div class="container" th:if="${articles.size() > 0}">
             <div class="row justify-content-center mt-5">
                 <div th:each="article : ${articles}" class="col-12 col-md-4 d-flex justify-content-center">
                     <div class="card mb-3" style="width: 18rem;">
                         <img th:if="${article.image != null}" th:src="${article.image.path}" class="card-img-top" alt="...">
-
+                        
                         <!-- ? se l’articolo non ha immagine, mostra l’immagine di default -->
                         <img th:unless="${article.image != null}" th:src="@{/images/default.jpg}" class="card-img-top" alt="...">
                         
@@ -37,14 +49,14 @@
                 </div>
             </div>
         </div>
-
+        
         <div class="row justify-content-center vh-100" th:unless="${articles.size() > 0}">
             <div class="col-10 mb-5">
-                <h1 class="text-center">NESSUN ARTICOLO PRESENTE</h1>
+                <h1 class="text-center m-5">NESSUN ARTICOLO PRESENTE</h1>
             </div>
         </div>
     </div>
-
+    
     <head th:insert="~{index :: footer}"></head>
     <script th:replace="~{index :: bootstrapScript}"></script>
 </body>

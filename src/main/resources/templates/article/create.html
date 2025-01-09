@@ -3,7 +3,19 @@
 <head th:insert="~{index :: head}"></head>
 <body>
     <head th:insert="~{index :: navbar}"></head>
-
+    
+    <!-- ? Barra delle categorie -->
+    <div class="bg-secondary py-2">
+        <div class="container">
+            <ul class="nav justify-content-center">
+                <!-- ? cicla le categorie -->
+                <li class="nav-item" th:each="category : ${categories}">
+                    <a class="nav-link text-white" th:href="@{/categories/search/{id}(id=${category.id})}" th:text="${category.name}"></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    
     <div class="vh-100">
         <div class="container">
             <div class="row">
@@ -13,17 +25,17 @@
                     </div>
                 </div>
             </div>
-
+            
             <div class="col-12 my-5">
                 <form th:action="@{/articles}" method="POST" th:object="${article}" enctype="multipart/form-data">
                     <div class="row mb-3">
                         <div class="col">
-
+                            
                             <label for="articleTitle" class="form-label">Titolo</label>
                             <input id="articleTitle" type="text" class="form-control" th:field="*{title}" placeholder="Inserisci un articolo..."/>
                             <p th:errors="*{title}" class="text-danger" th:if="${#fields.hasErrors('title')}"></p>
                         </div>
-
+                        
                         
                         <div class="col">
                             <label for="subtitle" class="form-label">Sottotitolo</label>
@@ -33,12 +45,12 @@
                         
                     </div>
                     
-                        <div class="mb-3">
-                            <label for="body" class="form-label">Articolo</label>
-                            <input id="body" type="text" class="form-control" th:field="*{body}" placeholder="Inserisci un testo..."/>
+                    <div class="mb-3">
+                        <label for="body" class="form-label">Articolo</label>
+                        <input id="body" type="text" class="form-control" th:field="*{body}" placeholder="Inserisci un testo..."/>
                         <p th:errors="*{body}" class="text-danger" th:if="${#fields.hasErrors('body')}"></p>
                     </div>
-
+                    
                     <div class="mb-3">
                         <label for="date" class="form-label">Publish date (8 chars)</label>
                         <input id="date" type="date" class="form-control" th:field="*{publish_date}" placeholder="yyyyMMdd"/>
@@ -63,7 +75,7 @@
             </div>
         </div>
     </div>
-
+    
     <head th:insert="~{index :: footer}"></head>
     <script th:replace="~{index :: bootstrapScript}"></script>
 </body>

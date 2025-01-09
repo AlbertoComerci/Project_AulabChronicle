@@ -15,24 +15,24 @@
 <body>
     
     <!-- Inizio navbar -->
-    <nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav th:fragment="navbar" class="navbar navbar-expand-lg bg-dark text-white">
         <div class="container-fluid">
-            <a class="navbar-brand" th:href="@{/}">Aulab Chronicle</a>
+            <a class="navbar-brand text-white" th:href="@{/}">Aulab Chronicle</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggle-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0 ">
                     <li sec:authorize="isAuthenticated && hasRole('ROLE_WRITER')" class="navbar-item mx-2">
-                        <a class="navbar-link" href="/articles/create">Crea un articolo</a>
+                        <a class="nav-link text-white" href="/articles/create">Crea un articolo</a>
                     </li>
                     <li class="navbar-item mx-2">
-                        <a class="navbar-link" href="/articles">Tutti gli articoli</a>
+                        <a class="nav-link text-white" href="/articles">Tutti gli articoli</a>
                     </li>
                     
                     <li class="navbar-item mx-2" sec:authorize="hasRole('ROLE_ADMIN')">
                         <div class="d-flex">
-                            <a class="navbar-link" href="/admin/dashboard">Dashboard Admin</a>
+                            <a class="nav-link text-white" href="/admin/dashboard">Dashboard Admin</a>
                             <div class="mt-1" th:if="${careerRequests > 0}">
                                 <i class="fas fa-bell fa-l pt-2"></i>
                                 <span class="badge rounded-pill bg-danger text-white p-1" th:text="${careerRequests}"></span>
@@ -42,7 +42,7 @@
                     
                     <li class="nav-item" sec:authorize="hasRole('ROLE_REVISOR')">
                         <div class="d-flex">
-                            <a class="nav-link"  href="/revisor/dashboard">Dashboard revisor</a>
+                            <a class="nav-link text-white" href="/revisor/dashboard">Dashboard revisor</a>
                             <div class="mt-1" th:if="${articlesToBeRevised>0}">
                                 <i class="fas fa-bell fa-1 pt-2"></i>
                                 <span class="badge rounded-pill bg-danger text-white px-1" th:text="${articlesToBeRevised}"></span>
@@ -51,12 +51,12 @@
                     </li>
 
                     <li class="nav-item" sec:authorize="hasRole('ROLE_WRITER')">
-                        <a href="/writer/dashboard" class="nav-link">Dashboard writer</a>
+                        <a href="/writer/dashboard" class="nav-link text-white">Dashboard writer</a>
                     </li>
                     
                     
                     <li class="navbar-item dropdown mx-2">
-                        <a class="navbar-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Accesso</a>
+                        <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Accesso</a>
                         
                         <ul class="dropdown-menu" aria-label="navbarDropdown">
                             <li sec:authorize="isAnonymous"><a href="" class="dropdown-item" aria-current="page" th:href="@{/register}">Registrati</a></li>
@@ -73,17 +73,17 @@
         </div>
         <form class="d-flex" th:action="@{/articles/search}" method="get">
             <input class="form-control me-2" type="search" placeholder="Search" name="keyword" aria-label="Search">
-            <button class="btn btn-outline-success" type="submit">Cerca</button>
+            <button class="btn btn-outline-success me-2" type="submit">Cerca</button>
         </form>
     </nav>
     <!-- Fine navbar -->
     
     <!-- Inizio footer -->
-    <footer th:fragment="footer" class="bg-dark text-white pt-4">
+    <footer th:fragment="footer" class="bg-dark text-white pt-4 mt-5">
         <div class="container">
             <div class="row justify-content-between">
                 <div class="col-md-4 mb-3">
-                    <a href="/">Aulab Chronicle</a>
+                    <a class="text-decoration-none" href="/">Aulab Chronicle</a>
                 </div>
                 <div class="col-md-4 mb-3 text-end">
                     <h5>Lavora con noi</h5>

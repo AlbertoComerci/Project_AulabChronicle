@@ -7,6 +7,18 @@
 <body>
     <head th:insert="~{index :: navbar}"></head>
 
+    <!-- ? Barra delle categorie -->
+    <div class="bg-secondary py-2">
+        <div class="container">
+            <ul class="nav justify-content-center">
+                <!-- ? cicla le categorie -->
+                <li class="nav-item" th:each="category : ${categories}">
+                    <a class="nav-link text-white" th:href="@{/categories/search/{id}(id=${category.id})}" th:text="${category.name}"></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
     <div class="container-fluid p-5 bg-secondary-subtle text-center">
         <div class="row justify-content-center">
             <div class="col-12">

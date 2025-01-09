@@ -67,6 +67,9 @@ public class ArticleController {
 
         viewModel.addAttribute("articles", articles);
 
+        List<CategoryDto> categories = categoryService.readAll();
+        viewModel.addAttribute("categories", categories);
+
         return "article/articles";
 
     }
@@ -78,6 +81,10 @@ public class ArticleController {
         viewModel.addAttribute("title", "Crea un articolo");
         viewModel.addAttribute("article", new Article());
         viewModel.addAttribute("categories", categoryService.readAll());
+
+        List<CategoryDto> categories = categoryService.readAll();
+        viewModel.addAttribute("categories", categories);
+
         return "article/create";
     }
 
@@ -109,6 +116,10 @@ public class ArticleController {
     public String detailArticle(@PathVariable("id") Long id, Model viewModel) {
         viewModel.addAttribute("title", "Article detail");
         viewModel.addAttribute("article", articleService.read(id));
+
+        List<CategoryDto> categories = categoryService.readAll();
+        viewModel.addAttribute("categories", categories);
+
         return "article/detail";
     }
 
@@ -118,6 +129,10 @@ public class ArticleController {
         viewModel.addAttribute("title", "Modifica articolo");
         viewModel.addAttribute("article", articleService.read(id));
         viewModel.addAttribute("categories", categoryService.readAll());
+
+        List<CategoryDto> categories = categoryService.readAll();
+        viewModel.addAttribute("categories", categories);
+
         return "article/edit";
     }
 
@@ -159,6 +174,10 @@ public class ArticleController {
     public String detailArticleRevisor(@PathVariable("id") Long id, Model viewModel) {
         viewModel.addAttribute("title", "Article detail");
         viewModel.addAttribute("article", articleService.read(id));
+
+        List<CategoryDto> categories = categoryService.readAll();
+        viewModel.addAttribute("categories", categories);
+
         return "revisor/detail";
     }
 
@@ -192,6 +211,10 @@ public class ArticleController {
 
         viewModel.addAttribute("articles", acceptedArticles);
 
+
+        List<CategoryDto> categories = categoryService.readAll();
+        viewModel.addAttribute("categories", categories);
+        
         return "article/articles";
     }
 
