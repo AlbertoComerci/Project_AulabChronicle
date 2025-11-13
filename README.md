@@ -125,7 +125,7 @@ Before running this project, ensure you have the following installed:
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/Hackademy-Specializzazione-Java/Progetto_Finale_Java_Alberto_Comerci.git
+   git clone https://github.com/AlbertoComerci/Project_AulabChronicle
    cd progetto_finale_java
    ```
 
@@ -385,8 +385,7 @@ This is a final bootcamp project and is not actively maintained. However, feel f
 
 **Alberto Comerci**
 
-- GitHub: [@Hackademy-Specializzazione-Java](https://github.com/Hackademy-Specializzazione-Java)
-- Project: [Progetto_Finale_Java_Alberto_Comerci](https://github.com/Hackademy-Specializzazione-Java/Progetto_Finale_Java_Alberto_Comerci)
+- Project: [Progetto_Finale_Java_Alberto_Comerci](https://github.com/AlbertoComerci/Project_AulabChronicle)
 
 ---
 
